@@ -1,5 +1,6 @@
 import icons from "@/constants/icons";
-import { Image, Text, View } from "react-native";
+import { RelativePathString, useRouter } from "expo-router";
+import { Image, Pressable, Text, View } from "react-native";
 
 const fetchSubscriptionInfo = (id: string) => {
   return {
@@ -14,10 +15,18 @@ const isValidIconKey = (key: string): key is keyof typeof icons => key in icons;
 type ItemProps = { id: string; title: string };
 
 const SubscriptionItem = ({ id, title }: ItemProps) => {
+  const router = useRouter();
   const { cost, duration, subscriptionEndDate } = fetchSubscriptionInfo(id);
 
+  const onSubscriptionPress = () => {
+    router.push(`/subscription/${id}` as const);
+  };
+
   return (
-    <View className="flex flex-row justify-between my-2 px-4 py-2 bg-white rounded-xl">
+    <Pressable
+      onPress={onSubscriptionPress}
+      className="flex flex-row justify-between my-2 px-4 py-2 bg-white rounded-xl"
+    >
       <View className="flex flex-row items-center gap-4">
         <View>
           {isValidIconKey(id) ? (
@@ -39,7 +48,7 @@ const SubscriptionItem = ({ id, title }: ItemProps) => {
         <Text className="font-bold">{cost}</Text>
         <Text className="font-sm text-gray-600">{duration}</Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
